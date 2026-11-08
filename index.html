@@ -174,98 +174,7 @@ var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isInter
 document.querySelectorAll('main section').forEach(function(s){io.observe(s)});
 })();
 </script>
-<!-- AI CHAT BOX NI SANDRA -->
-<div id="chat-btn" onclick="toggleChat()" style="position:fixed;bottom:20px;right:20px;background:#6C5CE7;color:white;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;z-index:9999;box-shadow:0 4px 15px rgba(0,0,0,0.3)">💬</div>
-
-<div id="chat-box" style="display:none;position:fixed;bottom:90px;right:20px;width:300px;max-width:90vw;background:white;border-radius:15px;box-shadow:0 5px 25px rgba(0,0,0,0.3);z-index:9999;overflow:hidden;font-family:sans-serif">
-  <div style="background:#6C5CE7;color:white;padding:15px;font-weight:bold">✨ Ask Sandra AI <span onclick="toggleChat()" style="float:right;cursor:pointer">✕</span><br><small style="font-weight:normal;opacity:0.9">Online • Replies instantly</small></div>
-  <div id="chat-messages" style="height:250px;overflow-y:auto;padding:12px;font-size:14px;color:#333"></div>
-  <div style="display:flex;border-top:1px solid #eee"><input id="chat-input" placeholder="Ask about Sandra..." style="flex:1;border:none;padding:12px;outline:none"><button onclick="sendMsg()" style="background:#6C5CE7;color:white;border:none;padding:0 15px;cursor:pointer">Send</button></div>
-</div>
-<script>
-let lastQ = "";
-let lastIdx = -1;
-
-const botAnswers = {
-  "sino": ["I'm Sandra De Guzman, 27, BSCS student sa Sorsogon State University - Bulan Campus!", "Si Sandra? Siya yung may-ari ng portfolio na to! Future businesswoman!"],
-  "edad": ["27 years old si Sandra!", "27 na siya, born May 25, 1999!"],
-  "birthday": ["May 25, 1999 birthday ni Sandra!", "Gemini siya kasi May 25 siya pinanganak!"],
-  "taga saan": ["Taga Bulan, Sorsogon siya, sa Bicol Region!", "Nakatira siya sa Bulan, Sorsogon, Philippines!"],
-  "zodiac": ["Gemini si Sandra!", "Gemini — kaya madaldal at creative yan!"],
-  "single": ["Single si Sandra! Focus muna sa studies!", "Single and focusing on her dreams muna!"],
-  "family": ["Pang-apat siya sa family nila na nakapag-college!", "Sobrang proud family niya sa kanya kasi pang-apat siya na nakapag-college!"],
-  "college": ["Yes, nagco-college siya ngayon! BSCS!", "Nag-aaral siya kahit late siya nag-start, pero never siya sumuko!"],
-  "course": ["BSCS — Bachelor of Science in Computer Science!", "Computer Science course niya!"],
-  "school": ["Sorsogon State University siya!", "Sa Sorsogon State University - Bulan Campus siya nag-aaral!"],
-  "campus": ["Bulan Campus siya!", "Sorsogon State University - Bulan Campus!"],
-  "year": ["BSCS student siya, patuloy na lumalaban!", "Student pa siya, pero malapit na matupad pangarap niya!"],
-  "pangarap": ["Pangarap niya maging successful businesswoman!", "Pangarap niya makatapos at matulungan family niya!"],
-  "goal": ["Goal niya maging happy — at happy siya pag nakatapos siya at may dream work!", "Goal niya: makatapos, magka-dream work, at matulungan family!"],
-  "happy": ["Happiness niya ay makatapos ng pag-aaral at matulungan family niya!", "Para kay Sandra, happy = finish studies + help family!"],
-  "businesswoman": ["Yes! Dream niya maging businesswoman na kumikita ng sapat para sa sarili at family!", "Gusto niya mag-negosyo balang araw!"],
-  "intern": ["Supply Office Intern siya dati!", "Nag-intern siya sa Supply Office, dun siya natuto ng responsibility!"],
-  "supply": ["Sa Supply Office siya nag-intern, nag-asikaso ng documents at office works!", "Supply Office Intern — dun siya natuto makisama sa iba't ibang tao!"],
-  "experience": ["May experience siya as Supply Office Intern!", "Natuto siya ng responsibility, adaptability, at pakikisama sa internship niya!"],
-  "skills": ["Marunong siya ng HTML, CSS, JavaScript, Python, Java, at MS Office!", "Skills niya: HTML, CSS, JS, Python, Java, Canva, at pagiging masipag!"],
-  "html": ["Yes! Marunong siya mag-HTML, portfolio niya nga HTML eh!", "HTML ang isa sa pinakauna niyang natutunan!"],
-  "css": ["Marunong siya mag-CSS para pagandahin design!", "CSS — pang-design ng portfolio niya!"],
-  "javascript": ["Marunong siya ng JavaScript, yan yung nagpapagana ng chat ko!", "JavaScript ang nagpapaandar sa akin!"],
-  "python": ["Marunong din siya ng Python!", "Python — isa sa favorite niyang language!"],
-  "java": ["Marunong siya ng Java!", "Java din, pang-school projects niya!"],
-  "projects": ["Projects niya: Itong portfolio mismo, at mga school projects niya sa HTML, Python, at Java!", "Gumawa na siya ng portfolio, at marami pang school projects!"],
-  "portfolio": ["Ito na yung portfolio niya! Ginawa niya mismo!", "Itong website na to, portfolio ni Sandra!"],
-  "contact": ["Pwede mo siya i-contact via email o Facebook! Nasa Contact section yung details niya!", "Check mo Contact section sa baba ng portfolio!"],
-  "email": ["Nasa Contact section yung email niya! Message mo lang siya!", "Email niya nasa baba ng portfolio, check mo!"],
-  "github": ["GitHub niya: sandradeguzman-cmd!", "Nasa GitHub siya — sandradeguzman-cmd!"],
-  "facebook": ["Nasa Contact section yung Facebook niya!", "Hanapin mo Facebook niya sa Contact!"],
-  "hobbies": ["Mahilig siya matuto ng bagong bagay, mag-code, at mangarap para sa family!", "Hobby niya: mag-aral, mag-code, at magplano para sa future!"],
-  "food": ["Bicolana siya, kaya mahilig siya sa Bicol Express syempre!", "Bicolana — kaya maanghang na pagkain, laban yan!"],
-  "color": ["Favorite color niya ay purple — kaya purple yung chat ko!", "Purple! Kaya purple ako!"],
-  "favorite": ["Favorite niya ay matuto at tumulong sa family!", "Favorite niya: family, learning, at pangarap niya!"],
-  "hello": ["Hello! Kamusta? Ask me about Sandra!", "Hi! Welcome! Ano gusto mo malaman kay Sandra?", "Heyy! Nandito ako!"],
-  "kamusta": ["Okay lang ako! Ikaw kamusta?", "Ayos lang! Si Sandra busy sa aral pero kaya niya!"],
-  "salamat": ["Walang anuman! Balik ka ulit ha!", "You're welcome! Thank you sa pag-visit!"],
-  "bye": ["Bye! Balik ka ha! Good luck kay Sandra!", "Paalam! Sana nagustuhan mo portfolio ni Sandra!"],
-  "tulong": ["Ano need mo? Pwede kita tulungan about kay Sandra, course, o pangarap niya!", "Sure! Tanong ka lang about Sandra!"],
-  "bakit": ["Kasi gusto niya matuto ng technology at bumuo ng future niya!", "Kasi para kay Sandra, CS ay hindi lang code, journey of growth siya!"],
-  "mahirap": ["Oo, mahirap, pero hindi sumusuko si Sandra!", "Mahirap pero kaya! Patience at dedication lang!"],
-  "late": ["Late siya nag-college due to personal matters, pero hindi siya sumuko!", "Late man siya nag-start, mas determinado siya ngayon!"],
-  "inspirasyon": ["Inspiration niya ay family niya!", "Family niya ang inspirasyon niya para magpatuloy!"],
-  "motto": ["Motto niya: Like code, I'm still a work in progress — and I'm proud of every line!", "Work in progress pa siya, pero proud siya sa bawat step!"],
-  "future": ["Sa future, gusto niya maging businesswoman at matulungan family niya!", "Sa future, successful siya at happy!"],
-  "sahod": ["Gusto niya kumita ng sapat para sa needs, wants, at para matulungan family!", "Dream niya kumita ng enough para sa sarili at family!"],
-  "bicol": ["Yes! Bicolana si Sandra, from Bulan, Sorsogon!", "Proud Bicolana!"],
-  "student": ["Yes, BSCS student siya sa Sorsogon State University!", "Student pa siya, pero future businesswoman na!"],
-  "kaya": ["Kaya ni Sandra yan! Determined siya!", "Kaya niya! Hindi siya sumusuko!"],
-  "advice": ["Payo ni Sandra: Huwag sumuko kahit late ka nag-start. Tuloy lang, one step at a time!", "Payo niya: Patience, dedication, at tuloy lang!"]
-};
-
-const fallback = [
-  "Hmm hindi ko pa alam yan. Try mo: Sino si Sandra? Anong course niya? Anong pangarap niya?",
-  "Ay hindi ko pa yan alam. Try mo tanungin about sa skills, family, o pangarap ni Sandra!",
-  "Interesting! Pero 50 questions pa lang alam ko. Try mo ibang tanong about kay Sandra!"
-];
-
-function getBotReply(message) {
-  let msg = message.toLowerCase();
-  if (msg === lastQ) return "Tinanong mo na yan kanina! Try mo ibang tanong, 50 questions alam ko!";
-  lastQ = msg;
-  let found = "fallback";
-  for (let key in botAnswers) { if (msg.includes(key)) { found = key; break; } }
-  let options = found === "fallback" ? fallback : botAnswers[found];
-  let idx;
-  do { idx = Math.floor(Math.random() * options.length); } while (idx === lastIdx && options.length > 1);
-  lastIdx = idx;
-  return options[idx];
-function sendChat() {
-  const input = document.querySelector('input[type="text"]');
-  const chatBox = document.querySelector('#chat-box, #chat-messages, #messages, .chat-messages, div');
-  if (!input || !input.value.trim()) return;
-  let userText = input.value.trim();
-  input.value = "";
-  // Ipakita yung tanong mo
-  let chatArea = document.getElementById('chat-messages') || document.getElementById('chat-box') || document.querySelector('.chat-messages');
-  if (chatArea) {
+   if (chatArea) {
     chatArea.innerHTML += '<div style="text-align:right; margin:5px; background:#7c3aed; color:white; padding:8px; border-radius:10px;">' + userText + '</div>';
     let reply = getBotReply(userText);
     setTimeout(() => {
@@ -282,9 +191,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 }
 </script>
-<!-- BAGONG CHAT NA SIGURADONG BUBUKAS -->
+<!-- SANDRA AI CHAT - 100 QUESTIONS -->
 <div id="sandra-chat-btn" style="position:fixed; bottom:20px; right:20px; width:60px; height:60px; background:#7c3aed; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; cursor:pointer; z-index:9999; box-shadow:0 4px 15px rgba(0,0,0,0.3);">💬</div>
-
 <div id="sandra-chat-box" style="display:none; position:fixed; bottom:90px; right:20px; width:320px; max-width:90vw; height:420px; background:white; border-radius:15px; box-shadow:0 4px 20px rgba(0,0,0,0.3); z-index:9999; flex-direction:column; overflow:hidden;">
   <div style="background:#7c3aed; color:white; padding:12px; font-weight:bold;">✨ Ask Sandra AI <span id="sandra-close" style="float:right; cursor:pointer;">✕</span></div>
   <div id="sandra-messages" style="flex:1; overflow-y:auto; padding:10px; background:#f9f9f9; display:flex; flex-direction:column;"></div>
@@ -293,34 +201,116 @@ document.addEventListener('DOMContentLoaded', function() {
     <button id="sandra-send" style="margin-left:5px; background:#7c3aed; color:white; border:none; padding:10px 15px; border-radius:20px; cursor:pointer;">Send</button>
   </div>
 </div>
-
 <script>
-document.getElementById('sandra-chat-btn').onclick = function() {
-  let box = document.getElementById('sandra-chat-box');
-  box.style.display = box.style.display === 'none' ? 'flex' : 'none';
-  if (box.style.display === 'flex' && document.getElementById('sandra-messages').innerHTML === '') {
-    document.getElementById('sandra-messages').innerHTML = '<div style="background:#eee; padding:8px; border-radius:10px; margin:5px;">🤖 Hi! I\'m Sandra AI! Tanong ka about kay Sandra — Sino siya? Anong course niya? Anong pangarap niya?</div>';
-  }
+const botAnswers = {
+"1 sino": ["I'm Sandra De Guzman, 27, BSCS student sa Sorsogon State University - Bulan Campus!"],
+"2 pangalan": ["Sandra De Guzman full name niya!"],
+"3 nickname": ["Sandra lang tawag sa kanya!"],
+"4 edad": ["27 years old si Sandra!"],
+"5 ilang taon": ["27 na siya!"],
+"6 birthday": ["May 25, 1999 birthday ni Sandra!"],
+"7 kaarawan": ["May 25, 1999!"],
+"8 zodiac": ["Gemini si Sandra!"],
+"9 gemini": ["Yes, Gemini siya!"],
+"10 taga saan": ["Taga Bulan, Sorsogon siya!"],
+"11 nakatira": ["Nakatira siya sa Bulan, Sorsogon!"],
+"12 barangay": ["Taga Bulan, Sorsogon siya sa Bicol!"],
+"13 probinsya": ["Sorsogon province niya!"],
+"14 region": ["Bicol Region, Region 5!"],
+"15 bicol": ["Yes! Proud Bicolana si Sandra!"],
+"16 bicolana": ["Proud Bicolana!"],
+"17 bansa": ["Philippines! Pilipina siya!"],
+"18 pilipina": ["Yes, Filipina siya!"],
+"19 language": ["Marunong siya mag-Tagalog, Bicol, at English!"],
+"20 bicolano": ["Bicolano dialect niya!"],
+"21 single": ["Single si Sandra! Focus muna sa studies!"],
+"22 boyfriend": ["Wala siyang boyfriend, studies muna!"],
+"23 jowa": ["Walang jowa, pangarap muna!"],
+"24 crush": ["Secret! Focus muna sa pangarap!"],
+"25 family": ["Pang-apat siya sa family na nakapag-college!"],
+"26 pamilya": ["Sobrang proud family niya sa kanya!"],
+"27 nanay": ["Mahal na mahal niya family niya, sila inspirasyon niya!"],
+"28 tatay": ["Family niya ang inspirasyon niya!"],
+"29 kapatid": ["Pang-apat siya na nakapag-college sa family!"],
+"30 pang-apat": ["Yes, pang-apat siya!"],
+"31 college": ["Yes, nagco-college siya ngayon!"],
+"32 nag-aaral": ["Yes, BSCS student siya!"],
+"33 late": ["Late siya nag-college due to personal matters, pero hindi sumuko!"],
+"34 huli": ["Late man nag-start, mas determinado siya ngayon!"],
+"35 university": ["Sorsogon State University!"],
+"36 school": ["Sorsogon State University siya!"],
+"37 campus": ["Bulan Campus siya!"],
+"38 bulan campus": ["Sorsogon State University - Bulan Campus!"],
+"39 course": ["BSCS — Bachelor of Science in Computer Science!"],
+"40 bscs": ["BSCS course niya!"],
+"41 student": ["Yes, BSCS student siya!"],
+"42 estudyante": ["Estudyante pa siya pero future businesswoman na!"],
+"43 year": ["BSCS student siya, patuloy na lumalaban!"],
+"44 klase": ["BSCS student sa Bulan Campus!"],
+"45 teacher": ["Madami siyang natutunan sa mga teachers niya sa Sorsogon State!"],
+"46 pangarap": ["Pangarap niya maging successful businesswoman!"],
+"47 dream": ["Dream niya makatapos at matulungan family niya!"],
+"48 goal": ["Goal niya: makatapos, magka-dream work, at matulungan family!"],
+"49 happy": ["Happy siya pag nakatapos siya at natulungan family niya!"],
+"50 business": ["Gusto niya mag-negosyo balang araw!"],
+"51 businesswoman": ["Yes! Dream niya maging businesswoman!"],
+"52 negosyo": ["Gusto niya mag-negosyo para sa family!"],
+"53 pera": ["Gusto niya kumita ng sapat para sa needs at family!"],
+"54 sahod": ["Dream niya kumita ng enough para sa sarili at family!"],
+"55 work": ["Gusto niya ng dream work na makakatulong sa family!"],
+"56 trabaho": ["Gusto niya magka-dream work after graduation!"],
+"57 intern": ["Supply Office Intern siya dati!"],
+"58 supply": ["Sa Supply Office siya nag-intern!"],
+"59 office": ["Supply Office — dun siya natuto ng responsibility!"],
+"60 experience": ["May experience siya as Supply Office Intern!"],
+"61 skills": ["Skills niya: HTML, CSS, JS, Python, Java, MS Office!"],
+"62 marunong": ["Marunong siya mag-HTML, CSS, JS, Python, Java!"],
+"63 kaya": ["Kaya ni Sandra yan! Determined siya!"],
+"64 html": ["Yes! Marunong siya mag-HTML!"],
+"65 css": ["Marunong siya mag-CSS pang-design!"],
+"66 javascript": ["Marunong siya ng JavaScript, yan nagpapagana sa akin!"],
+"67 python": ["Marunong siya ng Python!"],
+"68 java": ["Marunong siya ng Java!"],
+"69 canva": ["Marunong din siya mag-Canva pang-design!"],
+"70 office skill": ["Marunong siya mag-MS Office — Word, Excel, PowerPoint!"],
+"71 projects": ["Projects niya: Itong portfolio at school projects!"],
+"72 portfolio": ["Ito na yung portfolio niya! Ginawa niya mismo!"],
+"73 website": ["Itong website na to, portfolio ni Sandra!"],
+"74 github": ["GitHub niya: sandradeguzman-cmd!"],
+"75 contact": ["Check mo Contact section sa baba!"],
+"76 email": ["Email niya: sandradeguzman525@gmail.com, nasa Contact!"],
+"77 facebook": ["Nasa Contact section yung Facebook niya!"],
+"78 fb": ["Nasa Contact yung Facebook niya!"],
+"79 hobbies": ["Hobby niya: mag-aral, mag-code, at magplano para sa future!"],
+"80 libangan": ["Mahilig siya matuto ng bagong bagay!"],
+"81 food": ["Bicolana siya, mahilig siya sa Bicol Express!"],
+"82 pagkain": ["Bicol Express at maanghang, laban yan!"],
+"83 color": ["Favorite color niya ay purple!"],
+"84 kulay": ["Purple! Kaya purple ako!"],
+"85 favorite": ["Favorite niya: family, learning, at pangarap niya!"],
+"86 paborito": ["Paborito niya purple at family niya!"],
+"87 hello": ["Hello! Kamusta? Ask me about Sandra!"],
+"88 hi": ["Hi! Welcome! Ano gusto mo malaman kay Sandra?"],
+"89 hey": ["Heyy! Nandito ako!"],
+"90 kamusta": ["Okay lang ako! Ikaw kamusta?"],
+"91 musta": ["Ayos lang! Si Sandra busy sa aral pero kaya niya!"],
+"92 salamat": ["Walang anuman! Balik ka ulit ha!"],
+"93 thank": ["You're welcome! Thank you sa pag-visit!"],
+"94 bye": ["Bye! Balik ka ha!"],
+"95 paalam": ["Paalam! Sana nagustuhan mo portfolio ni Sandra!"],
+"96 tulong": ["Ano need mo? Tanong ka lang about kay Sandra!"],
+"97 help": ["Sure! Tanong ka lang about Sandra!"],
+"98 bakit": ["Kasi gusto niya matuto ng technology at bumuo ng future niya!"],
+"99 mahirap": ["Oo, mahirap, pero hindi sumusuko si Sandra!"],
+"100 future": ["Sa future, successful businesswoman siya at happy!"]
 };
-document.getElementById('sandra-close').onclick = function() {
-  document.getElementById('sandra-chat-box').style.display = 'none';
-};
-function sandraSend() {
-  let input = document.getElementById('sandra-input');
-  let msgBox = document.getElementById('sandra-messages');
-  if (!input.value.trim()) return;
-  let text = input.value.trim();
-  input.value = "";
-  msgBox.innerHTML += '<div style="align-self:flex-end; background:#7c3aed; color:white; padding:8px; border-radius:10px; margin:5px; max-width:80%;">' + text + '</div>';
-  let reply = getBotReply(text);
-  setTimeout(() => {
-    msgBox.innerHTML += '<div style="background:#eee; padding:8px; border-radius:10px; margin:5px; max-width:80%;">🤖 ' + reply + '</div>';
-    msgBox.scrollTop = msgBox.scrollHeight;
-  }, 400);
-  msgBox.scrollTop = msgBox.scrollHeight;
-}
-document.getElementById('sandra-send').onclick = sandraSend;
-document.getElementById('sandra-input').addEventListener('keypress', function(e){ if(e.key === 'Enter') sandraSend(); });
-</script>
+const fallback = ["Hmm hindi ko pa alam yan. Try mo: Sino si Sandra? Anong course niya? Anong pangarap niya? 100 questions alam ko!"];
+function getBotReply(m){let msg=m.toLowerCase();for(let k in botAnswers){let key=k.split(" ").slice(1).join(" ");if(msg.includes(key)) return botAnswers[k][0];}return fallback[0];}
+document.getElementById('sandra-chat-btn').onclick=function(){let b=document.getElementById('sandra-chat-box');b.style.display=b.style.display==='none'?'flex':'none';if(b.style.display==='flex'&&document.getElementById('sandra-messages').innerHTML===''){document.getElementById('sandra-messages').innerHTML='<div style="background:#eee; padding:8px; border-radius:10px; margin:5px;">🤖 Hi! I\'m Sandra AI! 100 questions alam ko! Tanong ka na!</div>';}};
+document.getElementById('sandra-close').onclick=function(){document.getElementById('sandra-chat-box').style.display='none';};
+function sandraSend(){let i=document.getElementById('sandra-input');let m=document.getElementById('sandra-messages');if(!i.value.trim())return;let t=i.value.trim();i.value="";m.innerHTML+='<div style="align-self:flex-end; background:#7c3aed; color:white; padding:8px; border-radius:10px; margin:5px; max-width:80%;">'+t+'</div>';let r=getBotReply(t);setTimeout(()=>{m.innerHTML+='<div style="background:#eee; padding:8px; border-radius:10px; margin:5px; max-width:80%;">🤖 '+r+'</div>';m.scrollTop=m.scrollHeight;},400);m.scrollTop=m.scrollHeight;}
+document.getElementById('sandra-send').onclick=sandraSend;
+document.getElementById('sandra-input').addEventListener('keypress',function(e){if(e.key==='Enter')sandraSend();});
+  </script>
 </body>
 </html>
