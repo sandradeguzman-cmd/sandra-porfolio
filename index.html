@@ -273,8 +273,6 @@ function sendChat() {
       chatArea.scrollTop = chatArea.scrollHeight;
     }, 400);
   }
-}
-
 // I-connect sa Enter at sa Send button
 document.addEventListener('DOMContentLoaded', function() {
   const input = document.querySelector('input[type="text"]');
@@ -284,6 +282,45 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 }
 </script>
+<!-- BAGONG CHAT NA SIGURADONG BUBUKAS -->
+<div id="sandra-chat-btn" style="position:fixed; bottom:20px; right:20px; width:60px; height:60px; background:#7c3aed; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; cursor:pointer; z-index:9999; box-shadow:0 4px 15px rgba(0,0,0,0.3);">💬</div>
 
+<div id="sandra-chat-box" style="display:none; position:fixed; bottom:90px; right:20px; width:320px; max-width:90vw; height:420px; background:white; border-radius:15px; box-shadow:0 4px 20px rgba(0,0,0,0.3); z-index:9999; flex-direction:column; overflow:hidden;">
+  <div style="background:#7c3aed; color:white; padding:12px; font-weight:bold;">✨ Ask Sandra AI <span id="sandra-close" style="float:right; cursor:pointer;">✕</span></div>
+  <div id="sandra-messages" style="flex:1; overflow-y:auto; padding:10px; background:#f9f9f9; display:flex; flex-direction:column;"></div>
+  <div style="display:flex; padding:10px; border-top:1px solid #eee;">
+    <input id="sandra-input" type="text" placeholder="Tanong ka kay Sandra..." style="flex:1; padding:10px; border:1px solid #ddd; border-radius:20px; outline:none;">
+    <button id="sandra-send" style="margin-left:5px; background:#7c3aed; color:white; border:none; padding:10px 15px; border-radius:20px; cursor:pointer;">Send</button>
+  </div>
+</div>
+
+<script>
+document.getElementById('sandra-chat-btn').onclick = function() {
+  let box = document.getElementById('sandra-chat-box');
+  box.style.display = box.style.display === 'none' ? 'flex' : 'none';
+  if (box.style.display === 'flex' && document.getElementById('sandra-messages').innerHTML === '') {
+    document.getElementById('sandra-messages').innerHTML = '<div style="background:#eee; padding:8px; border-radius:10px; margin:5px;">🤖 Hi! I\'m Sandra AI! Tanong ka about kay Sandra — Sino siya? Anong course niya? Anong pangarap niya?</div>';
+  }
+};
+document.getElementById('sandra-close').onclick = function() {
+  document.getElementById('sandra-chat-box').style.display = 'none';
+};
+function sandraSend() {
+  let input = document.getElementById('sandra-input');
+  let msgBox = document.getElementById('sandra-messages');
+  if (!input.value.trim()) return;
+  let text = input.value.trim();
+  input.value = "";
+  msgBox.innerHTML += '<div style="align-self:flex-end; background:#7c3aed; color:white; padding:8px; border-radius:10px; margin:5px; max-width:80%;">' + text + '</div>';
+  let reply = getBotReply(text);
+  setTimeout(() => {
+    msgBox.innerHTML += '<div style="background:#eee; padding:8px; border-radius:10px; margin:5px; max-width:80%;">🤖 ' + reply + '</div>';
+    msgBox.scrollTop = msgBox.scrollHeight;
+  }, 400);
+  msgBox.scrollTop = msgBox.scrollHeight;
+}
+document.getElementById('sandra-send').onclick = sandraSend;
+document.getElementById('sandra-input').addEventListener('keypress', function(e){ if(e.key === 'Enter') sandraSend(); });
+</script>
 </body>
 </html>
