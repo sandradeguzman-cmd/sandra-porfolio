@@ -257,6 +257,31 @@ function getBotReply(message) {
   do { idx = Math.floor(Math.random() * options.length); } while (idx === lastIdx && options.length > 1);
   lastIdx = idx;
   return options[idx];
+function sendChat() {
+  const input = document.querySelector('input[type="text"]');
+  const chatBox = document.querySelector('#chat-box, #chat-messages, #messages, .chat-messages, div');
+  if (!input || !input.value.trim()) return;
+  let userText = input.value.trim();
+  input.value = "";
+  // Ipakita yung tanong mo
+  let chatArea = document.getElementById('chat-messages') || document.getElementById('chat-box') || document.querySelector('.chat-messages');
+  if (chatArea) {
+    chatArea.innerHTML += '<div style="text-align:right; margin:5px; background:#7c3aed; color:white; padding:8px; border-radius:10px;">' + userText + '</div>';
+    let reply = getBotReply(userText);
+    setTimeout(() => {
+      chatArea.innerHTML += '<div style="text-align:left; margin:5px; background:#f3f4f6; padding:8px; border-radius:10px;">🤖 ' + reply + '</div>';
+      chatArea.scrollTop = chatArea.scrollHeight;
+    }, 400);
+  }
+}
+
+// I-connect sa Enter at sa Send button
+document.addEventListener('DOMContentLoaded', function() {
+  const input = document.querySelector('input[type="text"]');
+  const btn = document.querySelector('button');
+  if (input) input.addEventListener('keypress', function(e){ if(e.key === 'Enter') sendChat(); });
+  if (btn) btn.addEventListener('click', sendChat);
+});
 }
 </script>
 
