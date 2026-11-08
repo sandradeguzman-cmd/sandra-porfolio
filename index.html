@@ -303,7 +303,27 @@ const botAnswers = {
 "98 bakit": ["Kasi gusto niya matuto ng technology at bumuo ng future niya!"],
 "99 mahirap": ["Oo, mahirap, pero hindi sumusuko si Sandra!"],
 "100 future": ["Sa future, successful businesswoman siya at happy!"]
-};
+"101 about": ["Si Sandra ay Computer Science student from Bulan, Sorsogon. Motto niya: Building a future one line of code at a time!"],
+"102 who i am": ["Si Sandra De Guzman ay taga Bulan, Sorsogon, Computer Science student!"],
+"103 education": ["Computer Science student si Sandra! Makikita mo sa Education section ng portfolio niya yung journey niya!"],
+"104 school": ["Nag-aaral si Sandra ng Computer Science!"],
+"105 project": ["Ang main project ni Sandra ay itong portfolio website niya mismo! Ginawa niya sa HTML, CSS, at JavaScript!"],
+"106 paano ginawa": ["Ginawa niya to sa HTML, CSS, JavaScript, tapos ni-deploy sa Netlify at naka-save sa GitHub!"],
+"107 experience": ["Makikita mo sa Experience section yung mga naranasan at pinag-aralan ni Sandra!"],
+"108 certificate": ["May mga certificates si Sandra! Nasa portfolio niya yung mga nakuha niya!"],
+"109 skill": ["Marunong si Sandra sa HTML, CSS, JavaScript, web design, GitHub at Netlify!"],
+"110 html": ["Oo! HTML ang ginamit niya para sa structure ng portfolio niya!"],
+"111 css": ["Oo! CSS ang ginamit para maging maganda at maroon yung design!"],
+"112 javascript": ["Oo! JavaScript ang nagpapagalaw ng website — pati tong AI chat na to!"],
+"113 github": ["GitHub niya: sandradeguzman-cmd! Dun niya sine-save yung code niya!"],
+"114 netlify": ["Naka-deploy sa Netlify yung portfolio niya! Live na live!"],
+"115 contact": ["Pwede mo siya i-contact sa Contact section sa baba! Email niya: sandradeguzman525@gmail.com"],
+"116 pangarap": ["Pangarap ni Sandra maging successful developer at businesswoman!"],
+"117 personality": ["Si Sandra ay masipag, maasikaso at hindi sumusuko kahit mahirap ang coding!"],
+"118 advice": ["Payo ni Sandra: Wag matakot magsimula. Kahit isang line of code everyday, progress pa rin yun!"],
+"119 future": ["Sa future, gusto ni Sandra maging successful at makatulong sa family niya!"],
+"120 single": ["Focus muna si Sandra sa aral at future! Coding muna bago jowa!"]
+   };
 const fallback = ["Hmm hindi ko pa alam yan. Try mo: Sino si Sandra? Anong course niya? Anong pangarap niya? 100 questions alam ko!"];
 function getBotReply(m){let msg=m.toLowerCase();for(let k in botAnswers){let key=k.split(" ").slice(1).join(" ");if(msg.includes(key)) return botAnswers[k][0];}return fallback[0];}
 document.getElementById('sandra-chat-btn').onclick=function(){let b=document.getElementById('sandra-chat-box');b.style.display=b.style.display==='none'?'flex':'none';if(b.style.display==='flex'&&document.getElementById('sandra-messages').innerHTML===''){document.getElementById('sandra-messages').innerHTML='<div style="background:#eee; padding:8px; border-radius:10px; margin:5px;">🤖 Hi! I\'m Sandra AI! 100 questions alam ko! Tanong ka na!</div>';}};
