@@ -323,7 +323,7 @@ const botAnswers = {
 "118 advice": ["Payo ni Sandra: Wag matakot magsimula. Kahit isang line of code everyday, progress pa rin yun!"],
 "119 future": ["Sa future, gusto ni Sandra maging successful at makatulong sa family niya!"],
 "120 single": ["Focus muna si Sandra sa aral at future! Coding muna bago jowa!"]
-   };
+};
 const fallback = ["Hmm hindi ko pa alam yan. Try mo: Sino si Sandra? Anong course niya? Anong pangarap niya? 100 questions alam ko!"];
 function getBotReply(m){let msg=m.toLowerCase();for(let k in botAnswers){let key=k.split(" ").slice(1).join(" ");if(msg.includes(key)) return botAnswers[k][0];}return fallback[0];}
 document.getElementById('sandra-chat-btn').onclick=function(){let b=document.getElementById('sandra-chat-box');b.style.display=b.style.display==='none'?'flex':'none';if(b.style.display==='flex'&&document.getElementById('sandra-messages').innerHTML===''){document.getElementById('sandra-messages').innerHTML='<div style="background:#eee; padding:8px; border-radius:10px; margin:5px;">🤖 Hi! I\'m Sandra AI! 100 questions alam ko! Tanong ka na!</div>';}};
